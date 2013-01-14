@@ -1,6 +1,8 @@
 <?php namespace MongoValidation;
 
-class MongoPresenceVerifier implements PresenceVerifierInterface {
+use Illuminate\Validation as Validation;
+
+class MongoPresenceVerifier implements Validation\PresenceVerifierInterface {
 
 	/**
 	 * The database connection instance.

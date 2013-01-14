@@ -1,7 +1,7 @@
 <?php namespace MongoValidation;
 
 use Illuminate\Support\ServiceProvider;
-use Illuminate\Validation;
+use Illuminate\Validation as Validation;
 
 class MongoValidationServiceProvider extends ServiceProvider {
 
@@ -23,7 +23,7 @@ class MongoValidationServiceProvider extends ServiceProvider {
 
 		$this->app['validator'] = $this->app->share(function($app)
 		{
-			$validator = new Factory($app['translator']);
+			$validator = new Validation\Factory($app['translator']);
 
 			// The validation presence verifier is responsible for determing the existence
 			// of values in a given data collection, typically a relational database or
@@ -46,7 +46,7 @@ class MongoValidationServiceProvider extends ServiceProvider {
 	{
 		$this->app['validation.presence'] = $this->app->share(function($app)
 		{
-			return new MongoPresenceVerifier($app['mongo']);
+			return new MongoPresenceVerifier($app['mongo']->connection());
 		});
 	}
 
