@@ -1,0 +1,21 @@
+{
+    "name": "navruzm/mongo-validation",
+    "type": "library",
+    "description": "MongoDB Auth Driver for Laravel 4",
+    "keywords": ["L4", "MongoDB", "Laravel 4", "Laravel"],
+    "homepage": "http://github.com/navruzm/mongo-validation/",
+    "license": "MIT",
+    "require": {
+        "php": ">=5.3.0",
+        "navruzm/lmongo": "master-dev"
+    },
+    "authors": [
+        {
+            "name": "Mustafa Navruz",
+            "email": "mustafanavruz@gmail.com"
+        }
+    ],
+    "autoload": {
+        "psr-0": { "MongoValidation": "src/" }
+    }
+}
