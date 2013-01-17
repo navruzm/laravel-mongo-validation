@@ -3,12 +3,12 @@ This package implements the unique and exists [Laravel 4](http://laravel.com/) v
 Installation
 ============
 
-Add `navruzm/mongo-validation` as a requirement to composer.json:
+Add `navruzm/laravel-mongo-validation` as a requirement to composer.json:
 
 ```json
 {
     "require": {
-        "navruzm/mongo-validation": "*"
+        "navruzm/laravel-mongo-validation": "*"
     }
 }
 ```
