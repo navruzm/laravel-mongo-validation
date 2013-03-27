@@ -1,23 +1,24 @@
 <?php namespace MongoValidation;
 
 use Illuminate\Validation as Validation;
+use LMongo\Connection;
 
 class MongoPresenceVerifier implements Validation\PresenceVerifierInterface {
 
 	/**
 	 * The database connection instance.
 	 *
-	 * @var  \LMongo\DatabaseManager
+	 * @var  \LMongo\Connection
 	 */
 	protected $connection;
 
 	/**
 	 * Create a new database presence verifier.
 	 *
-	 * @param  \LMongo\DatabaseManager  $connection
+	 * @param  \LMongo\Connection  $connection
 	 * @return void
 	 */
-	public function __construct(\LMongo\DatabaseManager $connection)
+	public function __construct(Connection $connection)
 	{
 		$this->connection = $connection;
 	}
