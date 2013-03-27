@@ -7,19 +7,19 @@ class MongoPresenceVerifier implements Validation\PresenceVerifierInterface {
 	/**
 	 * The database connection instance.
 	 *
-	 * @var  \LMongo\Database
+	 * @var  \LMongo\DatabaseManager
 	 */
-	protected $db;
+	protected $connection;
 
 	/**
 	 * Create a new database presence verifier.
 	 *
-	 * @param  \LMongo\Database  $db
+	 * @param  \LMongo\DatabaseManager  $connection
 	 * @return void
 	 */
-	public function __construct(\LMongo\Database $db)
+	public function __construct(\LMongo\DatabaseManager $connection)
 	{
-		$this->db = $db;
+		$this->connection = $connection;
 	}
 
 	/**
@@ -42,7 +42,7 @@ class MongoPresenceVerifier implements Validation\PresenceVerifierInterface {
 			$query[$idColumn] = array('$ne' => '_id' != $idColumn ? $idColumn : new MongoID($excludeId));
 		}
 
-		return $this->db->{$collection}->find($query)->count();
+		return $this->connection->{$collection}->find($query)->count();
 	}
 
 	/**
@@ -59,7 +59,7 @@ class MongoPresenceVerifier implements Validation\PresenceVerifierInterface {
 		{
 			array_map(function($value){ return new MongoID($value); }, $values);
 		}
-		
-		return $this->db->{$collection}->find(array($column => array('$in' => $values)))->count();
+
+		return $this->connection->{$collection}->find(array($column => array('$in' => $values)))->count();
 	}
 }

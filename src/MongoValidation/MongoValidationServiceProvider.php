@@ -46,7 +46,7 @@ class MongoValidationServiceProvider extends ServiceProvider {
 	{
 		$this->app['validation.presence'] = $this->app->share(function($app)
 		{
-			return new MongoPresenceVerifier($app['mongo']->connection());
+			return new MongoPresenceVerifier($app['lmongo']->connection());
 		});
 	}
 
