@@ -33,7 +33,7 @@ class MongoPresenceVerifier implements Validation\PresenceVerifierInterface {
 	 * @param  string  $idColumn
 	 * @return int
 	 */
-	public function getCount($collection, $column, $value, $excludeId = null, $idColumn = null)
+    public function getCount($collection, $column, $value, $excludeId = null, $idColumn = null, array $extra = array())
 	{
 		$query = array($column => $value);
 
@@ -54,7 +54,7 @@ class MongoPresenceVerifier implements Validation\PresenceVerifierInterface {
 	 * @param  array   $values
 	 * @return int
 	 */
-	public function getMultiCount($collection, $column, array $values)
+    public function getMultiCount($collection, $column, array $values, array $extra = array())
 	{
 		if('_id' == $column)
 		{
