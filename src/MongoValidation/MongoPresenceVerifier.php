@@ -1,26 +1,33 @@
 <?php namespace MongoValidation;
 
 use Illuminate\Validation as Validation;
-use LMongo\Connection;
+use LMongo\ConnectionResolverInterface;
 
 class MongoPresenceVerifier implements Validation\PresenceVerifierInterface {
 
 	/**
 	 * The database connection instance.
 	 *
-	 * @var  \LMongo\Connection
+	 * @var  \LMongo\ConnectionResolverInterface
 	 */
-	protected $connection;
+	protected $db;
+
+	/**
+	 * The database connection to use.
+	 *
+	 * @var string
+	 */
+	protected $connection = null;
 
 	/**
 	 * Create a new database presence verifier.
 	 *
-	 * @param  \LMongo\Connection  $connection
+	 * @param  \LMongo\ConnectionResolverInterface  $db
 	 * @return void
 	 */
-	public function __construct(Connection $connection)
+	public function __construct(ConnectionResolverInterface $db)
 	{
-		$this->connection = $connection;
+		$this->db = $db;
 	}
 
 	/**
@@ -31,19 +38,26 @@ class MongoPresenceVerifier implements Validation\PresenceVerifierInterface {
 	 * @param  string  $value
 	 * @param  int     $excludeId
 	 * @param  string  $idColumn
+	 * @param  array   $extra
 	 * @return int
 	 */
-	public function getCount($collection, $column, $value, $excludeId = null, $idColumn = null)
+	public function getCount($collection, $column, $value, $excludeId = null, $idColumn = null, array $extra = array())
 	{
-		$query = array($column => $value);
+		$query = $this->collection($collection)->where($column, $value);
 
 		if ( ! is_null($excludeId))
 		{
 			$idColumn = $idColumn ?: '_id';
-			$query[$idColumn] = array('$ne' => '_id' != $idColumn ? $idColumn : new MongoID($excludeId));
+
+			$query->whereNe($idColumn, '_id' != $idColumn ? $idColumn : new MongoID($excludeId));
 		}
 
-		return $this->connection->{$collection}->find($query)->count();
+		foreach ($extra as $key => $extraValue)
+		{
+			$query->where($key, $extraValue);
+		}
+
+		return $query->count();
 	}
 
 	/**
@@ -52,15 +66,46 @@ class MongoPresenceVerifier implements Validation\PresenceVerifierInterface {
 	 * @param  string  $collection
 	 * @param  string  $column
 	 * @param  array   $values
+	 * @param  array   $extra
 	 * @return int
 	 */
-	public function getMultiCount($collection, $column, array $values)
+	public function getMultiCount($collection, $column, array $values, array $extra = array())
 	{
 		if('_id' == $column)
 		{
-			array_map(function($value){ return new MongoID($value); }, $values);
+			$values = array_map(function($value){ return new MongoID($value); }, $values);
 		}
 
-		return $this->connection->{$collection}->find(array($column => array('$in' => $values)))->count();
+		$query = $this->collection($collection)->whereIn($column, $values);
+
+		foreach ($extra as $key => $extraValue)
+		{
+			$query->where($key, $extraValue);
+		}
+
+		return $query->count();
 	}
+
+	/**
+	 * Get a query builder for the given collection.
+	 *
+	 * @param  string  $collection
+	 * @return \LMongo\Query\Builder
+	 */
+	protected function collection($collection)
+	{
+		return $this->db->connection($this->connection)->collection($collection);
+	}
+
+	/**
+	 * Set the connection to be used.
+	 *
+	 * @param  string  $connection
+	 * @return void
+	 */
+	public function setConnection($connection)
+	{
+		$this->connection = $connection;
+	}
+
 }

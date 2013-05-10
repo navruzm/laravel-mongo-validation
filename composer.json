@@ -7,7 +7,7 @@
     "license": "MIT",
     "require": {
         "php": ">=5.3.0",
-        "navruzm/lmongo": "master-dev"
+        "navruzm/lmongo": "dev-master"
     },
     "authors": [
         {
@@ -17,5 +17,6 @@
     ],
     "autoload": {
         "psr-0": { "MongoValidation": "src/" }
-    }
+    },
+    "minimum-stability": "dev"
 }

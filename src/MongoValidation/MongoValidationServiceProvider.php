@@ -23,9 +23,9 @@ class MongoValidationServiceProvider extends ServiceProvider {
 
 		$this->app['validator'] = $this->app->share(function($app)
 		{
-			$validator = new Validation\Factory($app['translator']);
+			$validator = new Factory($app['translator'], $app);
 
-			// The validation presence verifier is responsible for determing the existence
+			// The validation presence verifier is responsible for determining the existence
 			// of values in a given data collection, typically a relational database or
 			// other persistent data stores. And it is used to check for uniqueness.
 			if (isset($app['validation.presence']))
@@ -46,7 +46,7 @@ class MongoValidationServiceProvider extends ServiceProvider {
 	{
 		$this->app['validation.presence'] = $this->app->share(function($app)
 		{
-			return new MongoPresenceVerifier($app['lmongo']->connection());
+			return new MongoPresenceVerifier($app['lmongo']);
 		});
 	}
 
